@@ -1,7 +1,8 @@
-letra_edificio,gravedad_problema,year,month,cantidad_reportes,letra_edificio_encoded,gravedad_problema_encoded,anomaly_score,anomaly,letra_edificio_original,gravedad_problema_original
-A,Crítico,2024,9,1,0,0,-0.005672698773903528,-1,A,Crítico
-A,Serio,2024,9,1,0,3,-0.013840302957719985,-1,A,Serio
-ALFA,Crítico,2024,1,2,1,0,-0.0015091166649794374,-1,ALFA,Crítico
-N,Serio,2024,2,3,14,3,-0.010394006040220005,-1,N,Serio
-V1,Moderado,2024,9,2,23,2,-0.046025789946185225,-1,V1,Moderado
-X,Serio,2024,9,1,26,3,-0.002491460959755054,-1,X,Serio
+letra_edificio,gravedad_problema,tipo_problema,year,month,cantidad_reportes,tipo_problema_encoded,letra_edificio_encoded,gravedad_problema_encoded,anomaly_score,anomaly,letra_edificio_original,gravedad_problema_original,tipo_problema_original
+D,Moderado,Humedad,2024,2,2,3,5,2,-0.009043133427913852,-1,D,Moderado,Humedad
+M,Menor,Humedad,2024,3,2,3,13,1,-0.0367612588937174,-1,M,Menor,Humedad
+Q,Moderado,Ventilación,2024,1,2,4,17,2,-0.013297388052369907,-1,Q,Moderado,Ventilación
+U,Crítico,Electrodomésticos,2024,2,2,0,22,0,-0.0716981702771936,-1,U,Crítico,Electrodomésticos
+V1,Moderado,Ventilación,2024,9,2,4,23,2,-0.06545126207419194,-1,V1,Moderado,Ventilación
+W,Moderado,Ventilación,2024,2,2,4,25,2,-0.005299252286722234,-1,W,Moderado,Ventilación
+X,Serio,Físico,2024,9,1,2,26,3,-0.0017038065132967128,-1,X,Serio,Físico

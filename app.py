@@ -55,16 +55,16 @@ def swagger_ui():
 @app.route('/api/problems/predict', methods=['GET'])
 @swag_from({
     'tags': ['Problems'],
-    'summary': 'A simple Hello World endpoint',
+    'summary': 'Prediction for the number of problems in the next 6 months',
     'responses': {
         200: {
-            'description': 'Returns a Hello World message',
+            'description': 'Returns the predicted number of problems for the next 6 months',
             'schema': {
                 'type': 'object',
                 'properties': {
                     'message': {
                         'type': 'string',
-                        'example': 'Hello, World!'
+                        'example': 'Results will be displayed here'
                     }
                 }
             }
@@ -73,7 +73,7 @@ def swagger_ui():
 })
 
 def predictProblemsNextMonth():
-    return predictProblems()
+    return predictProblems("./reportes.csv")
 
 @app.route('/api/anomalies/detect', methods=['POST'])
 @swag_from({
@@ -81,7 +81,7 @@ def predictProblemsNextMonth():
     'summary': 'detect anomalies in the data',
     'parameters': [
       {
-        'name': 'tipo_problema',
+        'name': 'tipo_edificio',
         'in': 'body',
         'type': 'string',
         'required': True,
@@ -96,7 +96,7 @@ def predictProblemsNextMonth():
                 'properties': {
                     'message': {
                         'type': 'string',
-                        'example': 'Redirecting to the Swagger UI'
+                        'example': 'Anomalies detected'
                     }
                 }
                 
@@ -106,13 +106,14 @@ def predictProblemsNextMonth():
 })
 
 def detectAnomalies():
+    tipo_edificio = request.json['tipo_edificio']
+    detect_anomalies(tipo_edificio)
+
     # Cargar el archivo CSV
     df = pd.read_csv('anomalies_report.csv')
 
     # Convertir el DataFrame a formato JSON
     json_data = df.to_dict(orient='records')
-
-    detect_anomalies()
 
     # Devolver el JSON en la respuesta de la API
     return jsonify(json_data)
