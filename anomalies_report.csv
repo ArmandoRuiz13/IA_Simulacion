@@ -1,0 +1,7 @@
+letra_edificio,gravedad_problema,year,month,cantidad_reportes,letra_edificio_encoded,gravedad_problema_encoded,anomaly_score,anomaly,letra_edificio_original,gravedad_problema_original
+A,Crítico,2024,9,1,0,0,-0.005672698773903528,-1,A,Crítico
+A,Serio,2024,9,1,0,3,-0.013840302957719985,-1,A,Serio
+ALFA,Crítico,2024,1,2,1,0,-0.0015091166649794374,-1,ALFA,Crítico
+N,Serio,2024,2,3,14,3,-0.010394006040220005,-1,N,Serio
+V1,Moderado,2024,9,2,23,2,-0.046025789946185225,-1,V1,Moderado
+X,Serio,2024,9,1,26,3,-0.002491460959755054,-1,X,Serio
