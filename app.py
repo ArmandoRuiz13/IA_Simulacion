@@ -2,11 +2,14 @@ from flask import Flask, request, jsonify, redirect
 from flasgger import Swagger, swag_from
 from predict import predictProblems
 from anomalies import detect_anomalies
+from flask_cors import CORS
 import pandas as pd
 
 
 
 app = Flask(__name__)
+
+CORS(app)
 
 app.config['SWAGGER'] = {
     'title': 'Problems Prediction API',
