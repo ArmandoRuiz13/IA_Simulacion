@@ -4,12 +4,6 @@ from statsmodels.tsa.arima.model import ARIMA
 from flask import jsonify
 import locale
 
-import pandas as pd
-import matplotlib.pyplot as plt
-from statsmodels.tsa.arima.model import ARIMA
-from flask import jsonify
-import locale
-
 def predictProblems(csv_file_path):
     try:
         # Cambiar el locale a español

@@ -3,6 +3,7 @@ from flasgger import Swagger, swag_from
 from predict import predictProblems
 from anomalies import detect_anomalies
 from flask_cors import CORS
+from top10 import top10Reported
 import pandas as pd
 
 
@@ -20,8 +21,6 @@ app.config['SWAGGER'] = {
 
 # Swagger configuration
 swagger = Swagger(app)
-
-
 
 
 @app.route('/')
@@ -53,6 +52,31 @@ def swagger_ui():
     """
     return redirect('/apidocs/')
 
+
+
+@app.route('/api/problems/top-ten-reported-places', methods=['GET'])
+@swag_from({
+    'tags': ['Problems'],
+    'summary': 'Top ten places with the most reported problems',
+    'responses': {
+        200: {
+            'description': 'Returns the top ten places with the most reported problems',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'message': {
+                        'type': 'string',
+                        'example': 'Results will be displayed here'
+                    }
+                }
+            }
+        }
+    }
+})
+
+def topTenReportedPlaces():
+
+    return top10Reported("./reportes.csv")
 
 
 @app.route('/api/problems/predict', methods=['GET'])
