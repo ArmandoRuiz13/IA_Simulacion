@@ -1,7 +1,8 @@
 import pandas as pd
 from flask import jsonify
+from datetime import datetime
 
-def getReports(group_month=True, group_problem_type=False, group_building_type=False, problem_type=False, building_type=False):
+def getReports(group_month=True, group_problem_type=False, group_building_type=False, problem_type=False, building_type=False, last_13_months=False):
     # Cargar y preparar el dataset
     df = pd.read_csv('reportes.csv', na_values=['', ' ', 'NA', 'null'])
     
@@ -20,12 +21,23 @@ def getReports(group_month=True, group_problem_type=False, group_building_type=F
         else:
             df['fecha'] = df['fecha'].dt.tz_convert('America/Mexico_City')
 
-        # Extract group_month from 'fecha' and convert Period to string
+        # Filtrar por los últimos 13 meses dinámicamente si se especifica
+        if last_13_months:
+            # Obtener el año actual
+            current_year = pd.Timestamp.now(tz='America/Mexico_City').year
+
+            # Definir el rango dinámico: desde enero del año pasado hasta enero del año actual
+            start_date = pd.Timestamp(f'{current_year - 1}-01-01', tz='America/Mexico_City')
+            end_date = pd.Timestamp(f'{current_year}-01-31', tz='America/Mexico_City')
+
+            # Filtrar los reportes en este rango de fechas
+            df = df[(df['fecha'] >= start_date) & (df['fecha'] <= end_date)]
+
+        # Extraer 'mes' de la columna 'fecha' y convertir Period a string
         df['mes'] = df['fecha'].dt.to_period('M').astype(str)
 
     if group_problem_type:
         group_by_params.append('tipo_problema')
-
 
     if group_building_type:
         group_by_params.append('tipo_edificio')
@@ -40,7 +52,6 @@ def getReports(group_month=True, group_problem_type=False, group_building_type=F
         df_grouped = df_grouped[df_grouped['tipo_edificio'] == building_type]
 
     # Sort the data by 'cantidad_reportes' in descending order
-
     df_grouped = df_grouped.sort_values(by='tipo_problema', ascending=False)
 
     # Convertir a JSON

@@ -89,6 +89,13 @@ def swagger_ui():
             'description': 'Send true to group the problems by month'
         },
         {
+            'name': 'last_13_months',
+            'in': 'query',
+            'type': 'boolean',
+            'required': False,
+            'description': 'Send true of the last 13 months'
+        },
+        {
             'name': 'group_problem_type',
             'in': 'query',
             'type': 'boolean',
@@ -135,11 +142,12 @@ def swagger_ui():
 
 def getProblems():
     group_month = request.args.get('group_month')  # Get the value of 'param1'
+    last_13_months = request.args.get('last_13_months')  # Get the value of 'param1'
     group_problem_type = request.args.get('group_problem_type')  # Get the value of 'param2'
     group_building_type = request.args.get('group_building_type')
     problem_type = request.args.get('problem_type')
     building_type = request.args.get('building_type')
-    return getReports(group_month, group_problem_type, group_building_type, problem_type, building_type)
+    return getReports(group_month, group_problem_type, group_building_type, problem_type, building_type, last_13_months)
 
 @app.route('/api/problems/top-ten-reported-places', methods=['GET'])
 @swag_from({
