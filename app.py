@@ -5,6 +5,7 @@ from anomalies import detect_anomalies
 from flask_cors import CORS
 from top10 import top10Reported
 import pandas as pd
+from reports import getReports
 
 
 
@@ -53,6 +54,92 @@ def swagger_ui():
     return redirect('/apidocs/')
 
 
+
+# @app.route('/api/problems/top-ten-reported-places', methods=['GET'])
+# @swag_from({
+#     'tags': ['Problems'],
+#     'summary': 'Top ten places with the most reported problems',
+#     'responses': {
+#         200: {
+#             'description': 'Returns the top ten places with the most reported problems',
+#             'schema': {
+#                 'type': 'object',
+#                 'properties': {
+#                     'message': {
+#                         'type': 'string',
+#                         'example': 'Results will be displayed here'
+#                     }
+#                 }
+#             }
+#         }
+#     }
+# })
+
+
+@app.route('/api/problems', methods=['GET'])
+@swag_from({
+    'tags': ['Problems'],
+    'summary': 'Retrieve problems grouped by the parameters given',
+    'parameters': [
+        {
+            'name': 'group_month',
+            'in': 'query',
+            'type': 'boolean',
+            'required': False,
+            'description': 'Send true to group the problems by month'
+        },
+        {
+            'name': 'group_problem_type',
+            'in': 'query',
+            'type': 'boolean',
+            'required': False,
+            'description': 'Send true to group the problems by type'
+        },
+        {
+            'name': 'group_building_type',
+            'in': 'query',
+            'type': 'boolean',
+            'required': False,
+            'description': 'Send true to group the problems by building type'
+        },
+        {
+            'name': 'problem_type',
+            'in': 'query',
+            'type': 'string',
+            'required': False,
+            'description': 'Filter the problems by the type given'
+        },
+        {
+            'name': 'building_type',
+            'in': 'query',
+            'type': 'string',
+            'required': False,
+            'description': 'Filter the problems by the building type given'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Gets the problems grouped by the parameters given',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'message': {
+                        'type': 'string',
+                        'example': 'Results will be displayed here'
+                    }
+                }
+            }
+        }
+    }
+})
+
+def getProblems():
+    group_month = request.args.get('group_month')  # Get the value of 'param1'
+    group_problem_type = request.args.get('group_problem_type')  # Get the value of 'param2'
+    group_building_type = request.args.get('group_building_type')
+    problem_type = request.args.get('problem_type')
+    building_type = request.args.get('building_type')
+    return getReports(group_month, group_problem_type, group_building_type, problem_type, building_type)
 
 @app.route('/api/problems/top-ten-reported-places', methods=['GET'])
 @swag_from({

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from flask import jsonify
 import locale
-
+5
 def predictProblems(csv_file_path):
     try:
         # Cambiar el locale a español
@@ -19,10 +19,12 @@ def predictProblems(csv_file_path):
 
     # Eliminar filas con fechas inválidas
     df = df.dropna(subset=['fecha'])
-
+  
     # Agrupar por mes y contar el número de reportes por mes
     df['mes'] = df['fecha'].dt.to_period('M')  # Agrupar por mes
     reportes_por_mes = df.groupby('mes').size()
+
+    print(reportes_por_mes)
 
     # Convertir el resultado en un DataFrame con un índice de fechas mensuales
     reportes_por_mes = reportes_por_mes.to_timestamp()  # Convertir a formato de tiempo
