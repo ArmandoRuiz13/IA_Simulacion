@@ -2,7 +2,7 @@ import pandas as pd
 from flask import jsonify
 from datetime import datetime
 
-def getReports(group_month=True, group_problem_type=False, group_building_type=False, problem_type=False, building_type=False, last_13_months=False):
+def getReports(group_month=True, group_problem_type=False, group_building_type=False, problem_type=False, building_type=False, last_13_months=False, month=False):
     # Cargar y preparar el dataset
     df = pd.read_csv('reportes.csv', na_values=['', ' ', 'NA', 'null'])
     
@@ -35,6 +35,7 @@ def getReports(group_month=True, group_problem_type=False, group_building_type=F
 
         # Extraer 'mes' de la columna 'fecha' y convertir Period a string
         df['mes'] = df['fecha'].dt.to_period('M').astype(str)
+    
 
     if group_problem_type:
         group_by_params.append('tipo_problema')
@@ -42,17 +43,44 @@ def getReports(group_month=True, group_problem_type=False, group_building_type=F
     if group_building_type:
         group_by_params.append('tipo_edificio')
 
+    
+
+    df_grouped = df
     # Agrupar los datos y contar la cantidad de reportes
-    df_grouped = df.groupby(group_by_params).size().reset_index(name='cantidad_reportes')
+
+
+
+    if building_type:
+        df_grouped = df_grouped[df_grouped['tipo_edificio'] == building_type]
+        if building_type == 'Departamento':
+            group_by_params.append('tipo_departamento')
+        elif building_type == 'Academico':
+            group_by_params.append('numero_salon')
+            group_by_params.append('letra_edificio')
+        elif building_type == 'Baños':
+            group_by_params.append('edificio_bano')
+            group_by_params.append('tipo_bano')
+            group_by_params.append('piso_bano')
+        elif building_type == 'Áreas comunes':
+            group_by_params.append('tipo_area')
+
+
+
+    if group_by_params.__len__() != 0:
+        df_grouped = df.groupby(group_by_params).size().reset_index(name='cantidad_reportes')
+
 
     if problem_type:
         df_grouped = df_grouped[df_grouped['tipo_problema'] == problem_type]
 
-    if building_type:
-        df_grouped = df_grouped[df_grouped['tipo_edificio'] == building_type]
+    if month:
+        df_grouped = df_grouped[df_grouped['mes'] == month]
+        print(df_grouped)
 
+  
     # Sort the data by 'cantidad_reportes' in descending order
-    df_grouped = df_grouped.sort_values(by='tipo_problema', ascending=False)
+    if group_problem_type:
+        df_grouped = df_grouped.sort_values(by='tipo_problema', ascending=False)
 
     # Convertir a JSON
     result = df_grouped.to_dict(orient='records')

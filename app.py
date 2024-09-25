@@ -1,11 +1,16 @@
 from flask import Flask, request, jsonify, redirect
 from flasgger import Swagger, swag_from
-from predict import predictProblems
+from predict import predict_problems
 from anomalies import detect_anomalies
 from flask_cors import CORS
 from top10 import top10Reported
 import pandas as pd
 from reports import getReports
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import OperationalError
+from sqlalchemy import text
+
+
 
 
 
@@ -13,15 +18,24 @@ app = Flask(__name__)
 
 CORS(app)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1aF3E-4*36B4Cg24Da2AGA324Gf2cgaf@roundhouse.proxy.rlwy.net:15260/railway'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 app.config['SWAGGER'] = {
     'title': 'Problems Prediction API',
     'description': 'API for predicting problems and analyzing data to find unusual patterns',
     'uiversion': 3
 }
 
+# Initialize SQLAlchemy
+db = SQLAlchemy(app)
+
 
 # Swagger configuration
 swagger = Swagger(app)
+
+
+
 
 
 @app.route('/')
@@ -51,6 +65,20 @@ def swagger_ui():
       200:
         description: Redirect to the Swagger UI
     """
+
+    # Execute the query to fetch all rows from user_problema table
+    # result = db.session.execute(text('SELECT * FROM user_problema;'))
+    
+    # # Fetch all rows
+    # rows = result.fetchall()
+
+    # # If rows exist, print them and return a response
+    # reports = []
+    # for row in rows:
+    #     report = dict(row._mapping)  #  # Convert the row to a dictionary for easier processing
+    #     reports.append(report)
+    #     print(report)
+
     return redirect('/apidocs/')
 
 
@@ -122,6 +150,14 @@ def swagger_ui():
             'type': 'string',
             'required': False,
             'description': 'Filter the problems by the building type given'
+        },
+        {
+            'name': 'month',
+            'in': 'query',
+            'type': 'string',
+            'required': False,
+            'description': 'Filter the problems by the month given'
+
         }
     ],
     'responses': {
@@ -147,7 +183,8 @@ def getProblems():
     group_building_type = request.args.get('group_building_type')
     problem_type = request.args.get('problem_type')
     building_type = request.args.get('building_type')
-    return getReports(group_month, group_problem_type, group_building_type, problem_type, building_type, last_13_months)
+    month = request.args.get('month')
+    return getReports(group_month, group_problem_type, group_building_type, problem_type, building_type, last_13_months, month)
 
 @app.route('/api/problems/top-ten-reported-places', methods=['GET'])
 @swag_from({
@@ -178,6 +215,36 @@ def topTenReportedPlaces():
 @swag_from({
     'tags': ['Problems'],
     'summary': 'Prediction for the number of problems in the next 6 months',
+    'parameters': [
+        {
+            'name': 'month',
+            'in': 'query',
+            'type': 'boolean',
+            'required': False,
+            'description': 'Send true to group the problems by month'
+        },
+        {
+            'name': 'problem_type',
+            'in': 'query',
+            'type': 'string',
+            'required': False,
+            'description': 'Filter the problems by the type given'
+        },
+        {
+            'name': 'building_type',
+            'in': 'query',
+            'type': 'string',
+            'required': False,
+            'description': 'Filter the problems by the building type given'
+        },
+        {
+            'name': 'forecast_steps',
+            'in': 'query',
+            'type': 'integer',
+            'required': False,
+            'description': 'Number of months to predict'
+        }
+    ],
     'responses': {
         200: {
             'description': 'Returns the predicted number of problems for the next 6 months',
@@ -195,7 +262,11 @@ def topTenReportedPlaces():
 })
 
 def predictProblemsNextMonth():
-    return predictProblems("./reportes.csv")
+    month = request.args.get('month')  # Get the value of 'param1'
+    problem_type = request.args.get('problem_type')  # Get the value of 'param1'
+    building_type = request.args.get('building_type')  # Get the value of 'param1'
+    forecast_steps = request.args.get('forecast_steps') # Get the value of 'param1'
+    return predict_problems(month, problem_type, building_type, forecast_steps)
 
 @app.route('/api/anomalies/detect', methods=['POST'])
 @swag_from({
