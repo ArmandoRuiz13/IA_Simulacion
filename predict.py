@@ -16,7 +16,11 @@ def predict_problems(month=True, problem_type=None, building_type=None, forecast
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-    forecast_steps = int(forecast_steps)  # Convertir a entero
+    if forecast_steps:
+        forecast_steps = int(forecast_steps)  # Convertir a entero
+    else:
+        forecast_steps = 6  # Valor predeterminado  
+        
     # Asegurarse de que la columna 'fecha' esté en formato de fecha
     df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')  # Inferir formato de fecha automáticamente
     # Eliminar filas con fechas inválidas

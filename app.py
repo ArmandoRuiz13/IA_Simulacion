@@ -9,6 +9,7 @@ from reports import getReports
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import text
+from recomend import generateRecomendation
 
 
 
@@ -209,6 +210,56 @@ def getProblems():
 def topTenReportedPlaces():
 
     return top10Reported("./reportes.csv")
+
+
+@app.route('/api/problems/simulation', methods=['GET'])
+@swag_from({
+    'tags': ['Problems'],
+    'summary': 'Top ten places with the most reported problems',
+    'parameters': [
+        { 'name': 'tipo_edificio',
+            'in': 'query',
+            'type': 'string',
+            'required': True,
+            'description': 'Type of building to simulate',
+        },
+        {
+            'name': 'cantidad_reportes',
+            'in': 'query',
+            'type': 'integer',
+            'required': True,
+            'description': 'Number of reports to simulate',
+        },
+        {
+            'name': 'tipo_problema',
+            'in': 'query',
+            'type': 'string',
+            'required': True,
+            'description': 'Type of problem to simulate',
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Returns the top ten places with the most reported problems',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'message': {
+                        'type': 'string',
+                        'example': 'Results will be displayed here'
+                    }
+                }
+            }
+        }
+    }
+})
+
+def simulation():
+    tipo_edificio = request.args.get('tipo_edificio')  # Get the value of 'param1'
+    cantidad_reportes = request.args.get('cantidad_reportes')  # Get the value of 'param1'
+    tipo_problema = request.args.get('tipo_problema')  # Get the value of 'param1'
+
+    return generateRecomendation(tipo_edificio, tipo_problema, cantidad_reportes)
 
 
 @app.route('/api/problems/predict', methods=['GET'])
