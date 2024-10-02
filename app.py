@@ -325,11 +325,11 @@ def predictProblemsNextMonth():
     'summary': 'detect anomalies in the data',
     'parameters': [
       {
-        'name': 'tipo_edificio',
+        'name': 'tipo_problema',
         'in': 'body',
         'type': 'string',
         'required': True,
-      },
+      }
     ],
     'responses': {
         200: {
@@ -350,8 +350,8 @@ def predictProblemsNextMonth():
 })
 
 def detectAnomalies():
-    tipo_edificio = request.json['tipo_edificio']
-    detect_anomalies(tipo_edificio)
+    tipo_problema = request.json['tipo_problema']
+    detect_anomalies(tipo_problema, '11', '2023')
 
     # Cargar el archivo CSV
     df = pd.read_csv('anomalies_report.csv')
