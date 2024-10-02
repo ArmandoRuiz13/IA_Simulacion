@@ -1,2 +1,2 @@
-tipo_problema,cantidad_reportes,tipo_problema_encoded,anomaly_score,anomaly,tipo_problema_original
-Humedad,69,3,-0.016723179497170615,-1,Humedad
+tipo_edificio,cantidad_reportes,tipo_edificio_encoded,anomaly_score,anomaly,tipo_edificio_original
+Áreas comunes,14,3,-0.01724841355831752,-1,Áreas comunes
