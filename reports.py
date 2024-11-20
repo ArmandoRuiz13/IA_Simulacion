@@ -54,13 +54,14 @@ def getReports(group_month=True, group_problem_type=False, group_building_type=F
         df_grouped = df_grouped[df_grouped['tipo_edificio'] == building_type]
         if building_type == 'Departamento':
             group_by_params.append('tipo_departamento')
+            group_by_params.append('tipo_edificio_departamento')
         elif building_type == 'Academico':
             group_by_params.append('numero_salon')
             group_by_params.append('letra_edificio')
         elif building_type == 'Baños':
             group_by_params.append('edificio_bano')
             group_by_params.append('tipo_bano')
-            group_by_params.append('piso_bano')
+            # group_by_params.append('piso_bano')
         elif building_type == 'Áreas comunes':
             group_by_params.append('tipo_area')
 

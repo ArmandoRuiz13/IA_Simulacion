@@ -351,7 +351,7 @@ def predictProblemsNextMonth():
 
 def detectAnomalies():
     tipo_problema = request.json['tipo_problema']
-    detect_anomalies(tipo_problema, '11', '2023')
+    detect_anomalies(tipo_problema, '12', '2023')
 
     # Cargar el archivo CSV
     df = pd.read_csv('anomalies_report.csv')

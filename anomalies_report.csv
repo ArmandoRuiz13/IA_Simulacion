@@ -1,2 +1,1 @@
-tipo_edificio,cantidad_reportes,tipo_edificio_encoded,anomaly_score,anomaly,tipo_edificio_original
-Áreas comunes,14,3,-0.01724841355831752,-1,Áreas comunes
+tipo_problema,cantidad_reportes,anomaly_score,anomaly
